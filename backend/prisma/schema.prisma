@@ -12,8 +12,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url  	    = env("DATABASE_URL")
-  // uncomment next line if you use Prisma <5.10
-  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model Event {
@@ -22,7 +20,6 @@ model Event {
   title           String
   description     String?
   location        String?
-  // allDay          Boolean       @default(false)
   recurrenceRule  String?
   completed       Boolean       @default(false)
   createdAt       DateTime      @default(now())
@@ -30,20 +27,4 @@ model Event {
   overridedEvent  Event?        @relation("Event", fields: [overrideId], references: [id])
   overrideId      Int?
   overriddenBy    Event[]       @relation("Event")
-  // occurrences    EventOccurrence[]
 }
-
-// model EventOccurrence {
-//   id          Int      @id @default(autoincrement())
-//   event       Event    @relation(fields: [eventId], references: [id])
-//   eventId     Int
-//   startTime   DateTime
-//   endTime     DateTime
-//   completed   Boolean  @default(false)
-//   title       String?
-//   location    String?
-//   description String?
-//   createdAt   DateTime @default(now())
-//   updatedAt   DateTime @updatedAt
-// }
-
