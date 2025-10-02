@@ -20,7 +20,9 @@ model Event {
   title           String
   description     String?
   location        String?
-  recurrenceRule  String?
+  recurrenceRule  String
+  timeStart       String?
+  timeEnd         String?
   completed       Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
