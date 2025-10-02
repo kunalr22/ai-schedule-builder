@@ -36,8 +36,8 @@ export class GeminiService {
                                 Generate the recurrence rule based on the iCalendar RFC specification.
                                 Include start of recurrence time as DTSTART, end time as UNTIL, and days of week, interval, and count in the rrules as per iCalendar RFC specification.
                                 Ensure dtstart and until are written as yyyy-mm-dd                              
-                                Assume dtstart to and until to be the start and end of the entire day if not specified.
-                                Assume until to be 1 hour after dtstart if an until time is not specified.
+                                Leave the UNTIL field empty if it is a single-time event.
+                                For repeating events, assume dtstart to and until to be the start and end of the entire day if not specified.
                                 Assume standalone, singular events unless specified to be repeating, contextually.
                                 Default to a count of 30 for repeating events with unspecified counts.
                                 For repeating events with specific times of the day mentioned, write the times (hhmmss) in the timestart and timeend fields.
@@ -75,16 +75,22 @@ export class GeminiService {
             const rule = RRule.fromString(resJson.rrule);
             const dtstart = chrono.parseDate(resJson.dtstart);
             const until = chrono.parseDate(resJson.until);
-            if (dtstart) rule.options.dtstart = dtstart;
-            if (until) rule.options.until = until;
+            if (dtstart) {
+                rule.options.dtstart = dtstart;
+                rule.origOptions = { ...rule.origOptions, dtstart };
+            }
+            if (until) {
+                rule.options.until = until;
+                rule.origOptions = { ...rule.origOptions, until };
+            }
             console.log('----------------------------------');
             console.log(resJson.dtstart, '-', resJson.until);
             console.log(dtstart, '-', until);
             console.log(rule.options.dtstart, '-', rule.options.until);
             console.log(resJson.title);
             console.log(resJson.description);
-            console.log(RRule.optionsToString(rule.options));
-            console.log(`${resJson.timestart} - ${resJson.timeend}`);
+            console.log(rule.toString());
+            console.log(rule.toText());
         }
     }
 }
