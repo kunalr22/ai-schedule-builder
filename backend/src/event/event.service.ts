@@ -54,20 +54,31 @@ export class EventService {
     }
 
     findAll() {
-        console.log(
-            RRule.fromString(
-                'DTSTART:20251003T160000Z\nRRULE:FREQ=DAILY;COUNT=1',
-            ),
-        );
-        return `This action returns all event`;
+        const clerkId = 'placeholder';
+        return this.databaseService.event.findMany({
+            where: {
+                clerkId,
+            },
+        });
     }
 
     findOne(id: number) {
-        return `This action returns a #${id} event`;
+        // should later check if user actually owns the service once clerk implemented
+        return this.databaseService.event.findFirst({
+            where: {
+                id,
+            },
+        });
     }
 
     update(id: number, updateEventDto: Prisma.EventUpdateInput) {
-        return `This action updates a #${id} event`;
+        // should later check if user actually owns the service once clerk implemented
+        return this.databaseService.event.update({
+            where: {
+                id,
+            },
+            data: updateEventDto,
+        });
     }
 
     remove(id: number) {
